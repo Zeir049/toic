@@ -1,0 +1,7 @@
+# Python
+__pycache__/
+*.pyc
+saved_answer_keys.json
+
+# Result exports
+toeic_result_*.txt
