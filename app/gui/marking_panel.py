@@ -33,7 +33,8 @@ class MarkingPanel(ttk.LabelFrame):
 
         self._populate(total_questions)
 
-    def _populate(self, total_questions):
+    def _populate(self, total_questions, previous_marks=None):
+        previous_marks = previous_marks or {}
         self.configure(text=f" 2. 답안 마킹 (1~{total_questions}번) ")
 
         for child in self._scrollable_frame.winfo_children():
@@ -51,15 +52,17 @@ class MarkingPanel(ttk.LabelFrame):
 
             ttk.Label(q_frame, text=f"{q:03d}:", width=4).pack(side="left")
 
-            var = tk.StringVar(value="")
+            var = tk.StringVar(value=previous_marks.get(q, ""))
             self.radio_vars[q] = var
 
             for opt in OPTIONS:
                 ttk.Radiobutton(q_frame, text=opt, value=opt, variable=var).pack(side="left", padx=1)
 
     def rebuild(self, total_questions):
-        """Resize the grid to a new question count, clearing any existing marks."""
-        self._populate(total_questions)
+        """Resize the grid to a new question count, keeping marks for question
+        numbers that still exist in the new range."""
+        previous_marks = {q: var.get() for q, var in self.radio_vars.items() if var.get()}
+        self._populate(total_questions, previous_marks)
 
     def get_answers(self):
         """Return ({question_no: answer}, [unmarked question numbers])."""

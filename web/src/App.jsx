@@ -46,7 +46,6 @@ function App() {
     }
     setAnswerKey(parseAnswerString(raw))
     setTotalQuestions(raw.length)
-    setUserAnswers({})
     window.alert(`정답지가 적용되었습니다. (총 ${raw.length}문항)`)
   }
 
