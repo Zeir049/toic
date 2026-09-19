@@ -29,6 +29,7 @@ class ToeicGraderApp:
             on_register=self._register_answer_key,
             on_save=self._open_save_dialog,
             on_load=self._load_selected_key,
+            on_reset=self._reset_answer_key,
             saved_key_names=self.saved_keys.keys(),
         )
         self.answer_key_panel.pack(fill="x", padx=10, pady=5)
@@ -82,6 +83,15 @@ class ToeicGraderApp:
         raw_ans = self.saved_keys[name]
         self.answer_key_panel.set_raw_answer(raw_ans)
         self._register_answer_key(raw_ans)
+
+    def _reset_answer_key(self):
+        if not self.answer_key:
+            messagebox.showinfo("알림", "적용된 정답지가 없습니다.")
+            return
+        if messagebox.askyesno("초기화", "적용된 정답지를 초기화하시겠습니까?"):
+            self.answer_key = {}
+            self.answer_key_panel.set_raw_answer("")
+            self.answer_key_panel.select_saved_key("")
 
     def _reset_marking(self):
         if messagebox.askyesno("초기화", "마킹한 모든 답안을 지우시겠습니까?"):

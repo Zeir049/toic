@@ -75,6 +75,18 @@ function App() {
     handleRegister(raw)
   }
 
+  function handleResetAnswerKey() {
+    if (!answerKey) {
+      window.alert('적용된 정답지가 없습니다.')
+      return
+    }
+    if (window.confirm('적용된 정답지를 초기화하시겠습니까?')) {
+      setAnswerKey(null)
+      setAnswerKeyInput('')
+      setSelectedPreset('')
+    }
+  }
+
   function handleMark(q, opt) {
     setUserAnswers((prev) => ({ ...prev, [q]: opt }))
   }
@@ -149,6 +161,9 @@ function App() {
             onChange={(e) => setAnswerKeyInput(e.target.value)}
             placeholder="ABCDABCDAB..."
           />
+          <button type="button" className="secondary-button" onClick={handleResetAnswerKey}>
+            정답 초기화
+          </button>
           <button type="button" className="primary-button" onClick={() => handleRegister()}>
             정답 적용
           </button>

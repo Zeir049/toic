@@ -7,11 +7,12 @@ from app.grading import normalize_answer_string, validate_answer_string
 class AnswerKeyPanel(ttk.LabelFrame):
     """Answer-key text entry plus preset save/load controls."""
 
-    def __init__(self, master, *, on_register, on_save, on_load, saved_key_names, **kwargs):
+    def __init__(self, master, *, on_register, on_save, on_load, on_reset, saved_key_names, **kwargs):
         super().__init__(master, text=" 1. 정답지 관리 ", padding=(10, 10), **kwargs)
         self._on_register = on_register
         self._on_save = on_save
         self._on_load = on_load
+        self._on_reset = on_reset
         self._build(saved_key_names)
 
     def _build(self, saved_key_names):
@@ -25,6 +26,9 @@ class AnswerKeyPanel(ttk.LabelFrame):
         self.entry_answer_string = ttk.Entry(input_frame)
         self.entry_answer_string.pack(side="left", fill="x", expand=True)
 
+        ttk.Button(input_frame, text="정답 초기화", command=self._handle_reset).pack(
+            side="right", padx=(5, 0)
+        )
         ttk.Button(input_frame, text="정답 적용", command=self._handle_register).pack(
             side="right", padx=(5, 0)
         )
@@ -74,3 +78,6 @@ class AnswerKeyPanel(ttk.LabelFrame):
             messagebox.showwarning("오류", "불러올 정답지를 선택해주세요.")
             return
         self._on_load(selected_name)
+
+    def _handle_reset(self):
+        self._on_reset()
