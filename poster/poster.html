@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>토익 채점 & 오답노트 — 프로젝트 포스터 (A2)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="poster.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  </head>
+  <body>
+    <!--
+      ✏️ 포스터 정보 수정: 아래 POSTER 값만 바꾸고 `node poster/tools/build.mjs` 로 다시 출력하세요.
+    -->
+    <script>
+      window.POSTER = {
+        author: '', // 예: '홍길동'
+        affiliation: '', // 예: 'OO대학교 컴퓨터공학과 · 웹프로그래밍'
+        repo: 'https://github.com/Zeir049/toic',
+        year: '2026',
+      }
+    </script>
+
+    <div class="poster">
+      <!-- ───────── 헤더 ───────── -->
+      <header class="head">
+        <div>
+          <p class="kicker">CHROME EXTENSION · RAG STUDY COACH</p>
+          <h1>토익 채점 <span>&amp;</span> 오답노트</h1>
+          <p class="lead">PDF 시험지 바로 옆에서 마킹하고, 해설지를 붙여넣어 채점하고,<br />틀린 문제를 정리해 AI가 약점과 공부법까지 진단하는 크롬 확장 프로그램</p>
+          <div class="meta">
+            <span><b>만든 사람</b> <span class="blank" id="author"></span></span>
+            <span><b>소속</b> <span class="blank" id="affiliation"></span></span>
+            <span id="year"></span>
+          </div>
+        </div>
+        <div class="qr-box">
+          <div id="qr"></div>
+          <small>GitHub 소스 코드</small>
+          <span class="url" id="repo-url"></span>
+        </div>
+      </header>
+
+      <main class="body">
+        <!-- ───────── 1. 문제와 해결 ───────── -->
+        <section class="row hero">
+          <figure style="margin: 0; display: flex; flex-direction: column; min-height: 0">
+            <div class="browser" style="flex: 1; min-height: 0">
+              <div class="bar">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="addr">file:///C:/토익/sample-practice-test.pdf</span>
+                <span class="ext" title="확장 아이콘"></span>
+              </div>
+              <div class="view">
+                <div class="pdf"><img src="assets/sample-test.png" alt="PDF 시험지" /></div>
+                <div class="panel"><img src="assets/panel-mark.png" alt="사이드 패널 마킹 화면" /></div>
+              </div>
+            </div>
+            <figcaption class="caption">
+              크롬 기본 PDF 뷰어로 시험지를 열고 툴바 아이콘(<span class="mono">Alt+Shift+T</span>)을 누르면 오른쪽에 사이드 패널이 열립니다.
+              키보드 <span class="mono">A–D</span>로 마킹하면 다음 문항으로 자동 이동, <span class="mono">F</span>로 헷갈림 표시.
+            </figcaption>
+          </figure>
+
+          <div class="hero-side">
+            <div>
+              <h2><span class="no">1</span>왜 만들었나</h2>
+              <ul class="dots pain">
+                <li><b>시험지 따로, 답안지 따로</b><span>PDF 모의고사를 풀 때 OMR을 따로 출력하거나 노트에 답을 적고 손으로 채점</span></li>
+                <li><b>오답 정리가 흩어짐</b><span>틀린 이유는 노트에, 문제 캡처는 사진 폴더에 — 다시 보기 어렵다</span></li>
+                <li><b>점수만 남고 약점은 안 보임</b><span>어느 파트, 어떤 유형에서 왜 틀리는지 회차를 넘어 모아 보기 어렵다</span></li>
+              </ul>
+            </div>
+            <div class="answer">
+              <p>PDF 옆 한 화면에서<br />마킹부터 약점 진단까지 끝낸다</p>
+              <div class="flow">
+                <span>마킹</span><i>→</i><span>붙여넣기 채점</span><i>→</i><span>오답노트</span><i>→</i><span>PDF</span><i>→</i><span>AI 분석</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 2. 주요 기능 ───────── -->
+        <section>
+          <h2><span class="no">2</span>주요 기능</h2>
+          <div class="row features">
+            <div class="feature">
+              <div class="shot"><img src="assets/panel-grade.png" alt="채점 화면" /></div>
+              <div class="text">
+                <h3>붙여넣기 채점</h3>
+                <p>해설지의 정답을 형식 그대로 복사해 붙여넣으면 번호를 알아서 맞춰 채점합니다.</p>
+                <div class="formats">
+                  <span><code>101. (B) 102. (D)</code> 번호 형식</span>
+                  <span><code>1-10 ABDCA BCDAB</code> 순서 형식</span>
+                  <span><code>①②④③</code> <code>Ⓐ–Ⓓ</code> <code>ＡＢ</code> 기호·전각</span>
+                </div>
+                <ul class="dots">
+                  <li>LC/RC · Part 1–7 정답률</li>
+                  <li>미응답·헷갈림 분리 집계</li>
+                  <li>마킹을 고쳐 다시 채점하면 기록 갱신</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="shot"><img src="assets/panel-notes.png" alt="오답노트 화면" /></div>
+              <div class="text">
+                <h3>오답노트 자동 정리</h3>
+                <p>채점할 때마다 <b>오답 · 미응답 · 맞았지만 헷갈린 문항</b>이 회차별 노트로 모입니다.</p>
+                <ul class="dots">
+                  <li>틀린 이유 태그 8종<br /><small class="caption" style="margin: 0">어휘 · 문법 · 해석 · 패러프레이징 · 듣기 · 시간부족 · 실수 · 함정</small></li>
+                  <li>메모 자동 저장, 복습 완료 체크</li>
+                  <li><b>📷 화면 캡처</b> → 새 창에서 문제 영역만 드래그해 첨부, 또는 <span class="mono">Win+Shift+S</span> 후 <span class="mono">Ctrl+V</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="feature pdf">
+              <div class="shot doc"><img src="assets/report.png" alt="오답노트 PDF 문서" /></div>
+              <div class="two">
+                <div>
+                  <h3>오답노트 PDF 내보내기</h3>
+                  <p>인쇄용 A4 문서를 만들어 크롬의 <b>“PDF로 저장”</b>으로 내보냅니다. 한글이 이미지가 아닌 <b>텍스트</b>로 들어가 선택·검색이 됩니다.</p>
+                </div>
+                <ul class="dots">
+                  <li>회차별 점수표 · 파트별 정답률</li>
+                  <li>문제 이미지 · 태그 · 메모 카드</li>
+                  <li>옵션: 전체 답안표, 메모 없는 문항에 필기 줄</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 3. AI 약점 분석 (RAG) ───────── -->
+        <section>
+          <h2><span class="no">3</span>AI 약점 분석 · 공부법 추천 <span style="font-weight: 500; color: var(--muted); font-size: 16pt">— RAG를 LangChain 없이 직접 구현</span></h2>
+          <div class="row ai">
+            <div class="ai-left">
+              <svg class="pipeline" viewBox="0 0 1000 268" role="img" aria-label="RAG 파이프라인">
+                <defs>
+                  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#64748b" />
+                  </marker>
+                </defs>
+                <style>
+                  .bx { fill: #fff; stroke: #cbd5e1; stroke-width: 2; }
+                  .bx.rag { fill: #e8efff; stroke: #2563eb; }
+                  .bx.ext { fill: #1d4ed8; stroke: #1d4ed8; }
+                  .t { font: 700 24px Pretendard, sans-serif; fill: #0f172a; }
+                  .s { font: 500 18.5px Pretendard, sans-serif; fill: #475569; }
+                  .lb { font: 700 17px Pretendard, sans-serif; fill: #2563eb; }
+                  .w { fill: #fff; }
+                  .tag { font: 800 16px Pretendard, sans-serif; letter-spacing: 1px; }
+                  .br { fill: none; stroke-width: 3; }
+                </style>
+                <path class="br" d="M6 42 v-12 h376 v12" stroke="#94a3b8" />
+                <text class="tag" x="194" y="20" text-anchor="middle" fill="#64748b">브라우저 안에서 계산 · 외부 전송 없음</text>
+                <path class="br" d="M414 42 v-12 h580 v12" stroke="#2563eb" />
+                <text class="tag" x="704" y="20" text-anchor="middle" fill="#2563eb">RAG · “추천 받기”를 누를 때만 실행</text>
+
+                <rect class="bx" x="6" y="50" width="172" height="166" rx="14" />
+                <text class="t" x="22" y="84">채점 기록</text>
+                <text class="t" x="22" y="112">+ 오답노트</text>
+                <text class="s" x="22" y="146">파트별 정·오답</text>
+                <text class="s" x="22" y="171">태그 · 메모</text>
+                <text class="s" x="22" y="196">미응답 · 헷갈림</text>
+
+                <rect class="bx" x="210" y="50" width="172" height="166" rx="14" />
+                <text class="t" x="226" y="84">약점 프로필</text>
+                <text class="s" x="226" y="121">낮은 파트 · 태그 비중</text>
+                <text class="s" x="226" y="146">RC 후반 미응답</text>
+                <text class="s" x="226" y="171">헷갈림 비율</text>
+                <text class="s" x="226" y="196">→ 검색 신호·가중치</text>
+
+                <rect class="bx rag" x="414" y="50" width="180" height="166" rx="14" />
+                <text class="t" x="430" y="84">① 검색</text>
+                <text class="lb" x="514" y="84">Retrieve</text>
+                <text class="s" x="430" y="121">공부법 문서 24개</text>
+                <text class="s" x="430" y="146">신호 일치 가중치</text>
+                <text class="s" x="430" y="171">+ 메모 키워드</text>
+                <text class="s" x="430" y="196">→ 상위 6개</text>
+
+                <rect class="bx rag" x="614" y="50" width="180" height="166" rx="14" />
+                <text class="t" x="630" y="84">② 보강</text>
+                <text class="lb" x="714" y="84">Augment</text>
+                <text class="s" x="630" y="121">수치 + 최근 메모</text>
+                <text class="s" x="630" y="146">+ 자료 [1]–[6]</text>
+                <text class="s" x="630" y="171">“근거 번호 인용,</text>
+                <text class="s" x="630" y="196">지어내지 말 것”</text>
+
+                <rect class="bx ext" x="814" y="50" width="180" height="166" rx="14" />
+                <text class="t w" x="830" y="84">③ 생성</text>
+                <text class="lb w" x="912" y="84" style="opacity: 0.85">Generate</text>
+                <text class="s w" x="830" y="121">OpenRouter</text>
+                <text class="s w" x="830" y="146">무료 LLM</text>
+                <text class="s w" x="830" y="171">스트리밍 응답</text>
+                <text class="s w" x="830" y="196">(SSE)</text>
+
+                <line x1="180" y1="133" x2="206" y2="133" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+                <line x1="384" y1="133" x2="410" y2="133" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+                <line x1="596" y1="133" x2="610" y2="133" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+                <line x1="796" y1="133" x2="810" y2="133" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+
+                <path d="M904 218 v14 H500 v8" fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+                <rect x="170" y="240" width="660" height="27" rx="13.5" fill="#0f172a" />
+                <text x="500" y="260" text-anchor="middle" style="font: 700 17.5px Pretendard, sans-serif; fill: #fff">진단 · 약점 TOP 3 · 공부법 [근거 번호] · 2주 계획 · 다음 시험 체크리스트</text>
+              </svg>
+
+              <div class="why">
+                <div><b>LangChain 대신 직접 구현</b>MV3 확장은 원격 스크립트를 쓸 수 없고 이 프로젝트는 빌드가 없습니다. 문서가 수십 개 규모라 임베딩 없이 <b style="display: inline; color: inherit">메타데이터 + 키워드</b> 하이브리드 검색으로 충분했습니다.</div>
+                <div><b>근거가 보이는 추천</b>공부법 문장마다 자료 번호 <span class="mono">[1]</span>이 붙고, 번호를 누르면 원문 자료가 펼쳐집니다. 모델이 쓴 HTML은 이스케이프해 실행되지 않습니다.</div>
+                <div><b>개인정보 최소 전송</b>파트별 정답률 · 태그 통계 · 최근 메모 일부만 보냅니다. 시험 이름 · PDF · 이미지는 보내지 않고, API 키는 브라우저에만 저장됩니다.</div>
+                <div><b>무료 모델의 변수에 대응</b>무료 모델 목록을 실시간 조회하고, 추론 모델이 생각만 하고 답이 비는 경우·사용 한도 초과를 원인별로 안내합니다.</div>
+              </div>
+            </div>
+
+            <div class="ai-shots">
+              <figure>
+                <div class="shot"><img src="assets/panel-analysis.png" alt="약점 분석 화면" /></div>
+                <figcaption class="caption">약점 프로필 — 평균보다 낮은 파트를 빨간색으로, 태그·시간·헷갈림 신호와 회차별 추이</figcaption>
+              </figure>
+              <figure>
+                <div class="shot"><img src="assets/panel-ai.png" alt="AI 공부법 추천 화면" style="object-position: 0 4%" /></div>
+                <figcaption class="caption">AI 추천 — 근거 자료 번호와 참고 자료 목록 (화면의 답변은 예시 문안)</figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 4. 구조 · 기술 · 과정 ───────── -->
+        <section class="row bottom">
+          <div>
+            <h2><span class="no">4</span>시스템 구조</h2>
+            <svg class="arch" viewBox="0 0 700 300" role="img" aria-label="시스템 구조도">
+              <defs>
+                <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#64748b" />
+                </marker>
+              </defs>
+              <style>
+                .fr { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 8 6; }
+                .b2 { fill: #fff; stroke: #cbd5e1; stroke-width: 2; }
+                .b2.main { stroke: #2563eb; stroke-width: 3; }
+                .h { font: 700 20px Pretendard, sans-serif; fill: #0f172a; }
+                .m { font: 500 16px Pretendard, sans-serif; fill: #64748b; }
+                .chip { fill: #e8efff; }
+                .ct { font: 700 16px Pretendard, sans-serif; fill: #1d4ed8; }
+                .ln { stroke: #64748b; stroke-width: 2.5; fill: none; }
+              </style>
+              <rect class="fr" x="3" y="24" width="526" height="273" rx="14" />
+              <text x="16" y="16" style="font: 800 15px Pretendard, sans-serif; fill: #64748b; letter-spacing: 1px">CHROME 브라우저 (MANIFEST V3)</text>
+
+              <rect class="b2" x="18" y="40" width="170" height="92" rx="12" />
+              <text class="h" x="32" y="72">PDF 시험지 탭</text>
+              <text class="m" x="32" y="98">크롬 기본 PDF 뷰어</text>
+              <text class="m" x="32" y="120">로컬 · 웹 PDF</text>
+
+              <rect class="b2 main" x="246" y="40" width="268" height="148" rx="12" />
+              <text class="h" x="262" y="72">사이드 패널</text>
+              <text class="m" x="378" y="72">sidepanel.html</text>
+              <rect class="chip" x="262" y="88" width="54" height="30" rx="8" /><text class="ct" x="289" y="109" text-anchor="middle">마킹</text>
+              <rect class="chip" x="322" y="88" width="54" height="30" rx="8" /><text class="ct" x="349" y="109" text-anchor="middle">채점</text>
+              <rect class="chip" x="382" y="88" width="72" height="30" rx="8" /><text class="ct" x="418" y="109" text-anchor="middle">오답노트</text>
+              <rect class="chip" x="460" y="88" width="44" height="30" rx="8" /><text class="ct" x="482" y="109" text-anchor="middle">분석</text>
+              <text class="m" x="262" y="148">lib/ 순수 함수 모듈</text>
+              <text class="m" x="262" y="170">채점 · 분석 · 검색 · 스트리밍</text>
+
+              <path class="ln" d="M192 86 H242" marker-start="url(#a2)" marker-end="url(#a2)" stroke-dasharray="6 5" />
+              <text class="m" x="217" y="78" text-anchor="middle" style="font-size: 14px">나란히</text>
+
+              <rect class="b2" x="18" y="160" width="80" height="64" rx="12" />
+              <text class="h" x="58" y="188" text-anchor="middle" style="font-size: 17px">캡처 창</text>
+              <text class="m" x="58" y="210" text-anchor="middle" style="font-size: 13px">영역 자르기</text>
+              <rect class="b2" x="108" y="160" width="80" height="64" rx="12" />
+              <text class="h" x="148" y="188" text-anchor="middle" style="font-size: 17px">리포트</text>
+              <text class="m" x="148" y="210" text-anchor="middle" style="font-size: 13px">인쇄 → PDF</text>
+              <path class="ln" d="M58 134 V156" marker-end="url(#a2)" />
+              <path class="ln" d="M244 192 H192" marker-end="url(#a2)" />
+              <text class="m" x="218" y="184" text-anchor="middle" style="font-size: 13px">내보내기</text>
+
+              <rect x="18" y="240" width="496" height="44" rx="11" fill="#0f172a" />
+              <text x="266" y="268" text-anchor="middle" style="font: 700 17px Pretendard, sans-serif; fill: #fff">chrome.storage.local — 기록 · 노트 · 이미지 · 설정</text>
+              <path class="ln" d="M58 226 V236" marker-end="url(#a2)" />
+              <path class="ln" d="M380 190 V236" marker-start="url(#a2)" marker-end="url(#a2)" />
+
+              <rect x="552" y="78" width="146" height="78" rx="12" fill="#1d4ed8" />
+              <text x="625" y="110" text-anchor="middle" style="font: 700 18px Pretendard, sans-serif; fill: #fff">OpenRouter</text>
+              <text x="625" y="134" text-anchor="middle" style="font: 500 14px Pretendard, sans-serif; fill: #dbeafe">무료 LLM · HTTPS</text>
+              <path class="ln" d="M516 117 H548" marker-start="url(#a2)" marker-end="url(#a2)" />
+              <text class="m" x="625" y="180" text-anchor="middle" style="font-size: 14px">분석 탭에서만 호출</text>
+            </svg>
+          </div>
+
+          <div class="points">
+            <h2><span class="no">5</span>기술 포인트</h2>
+            <ul class="dots">
+              <li><b>정답지 파서</b> — 번호+정답 쌍과 순서 나열을 모두 찾아 더 그럴듯한 쪽을 선택. 범위 밖·누락·중복 번호를 바로 경고</li>
+              <li><b>한글 PDF</b> — 폰트를 내장하는 PDF 라이브러리 대신 브라우저 인쇄 엔진 사용 → 텍스트가 살아 있는 PDF, A4 쪽 나눔 CSS</li>
+              <li><b>최소 권한</b> — <span class="mono">sidePanel</span> <span class="mono">storage</span>만 기본, 화면 캡처용 <span class="mono">&lt;all_urls&gt;</span>는 처음 누를 때만 요청</li>
+              <li><b>테스트</b> — DOM·크롬 API와 분리한 순수 함수(채점·분석·검색·SSE 파싱)를 <span class="mono">node --test</span>로 21개 검증</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2><span class="no">6</span>발전 과정과 다음 단계</h2>
+            <ol class="timeline">
+              <li><span class="step">1</span><span>Python <b>tkinter GUI · CLI</b><small>정답지 등록 · 마킹 · txt 결과 저장</small></span></li>
+              <li><span class="step">2</span><span><b>React + Vite 웹</b><small>같은 채점 로직을 브라우저로</small></span></li>
+              <li class="now"><span class="step">3</span><span><b>크롬 확장 + RAG 코치</b><small>PDF 옆 사이드 패널, 오답노트, PDF, AI 분석</small></span></li>
+            </ol>
+            <div class="next">
+              <h3>다음 단계</h3>
+              <ul class="dots">
+                <li>문서가 늘면 임베딩 기반 검색으로 전환</li>
+                <li>파트별 타이머 · 웹 스토어 배포</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="badges">
+          <span>JavaScript (ES Modules)</span><span>Chrome Extension MV3</span><span>Side Panel API</span><span>chrome.storage</span><span>OpenRouter</span><span>RAG</span><span>SSE Streaming</span><span>node:test</span>
+        </div>
+        <div style="text-align: right; flex: none; max-width: 150mm">
+          ※ 화면 속 점수·메모·AI 답변은 가상의 예시 데이터이며,<br />시험지 문항은 이 프로젝트에서 직접 작성한 예시입니다.
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const P = window.POSTER
+      const fill = (id, v) => {
+        const el = document.getElementById(id)
+        if (v) {
+          el.textContent = v
+          el.classList.remove('blank')
+        }
+      }
+      fill('author', P.author)
+      fill('affiliation', P.affiliation)
+      document.getElementById('year').textContent = P.year
+      document.getElementById('repo-url').textContent = P.repo.replace(/^https?:\/\//, '')
+      const qr = qrcode(0, 'M')
+      qr.addData(P.repo)
+      qr.make()
+      document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true })
+
+      // build.mjs 가 이 신호를 기다렸다가 PDF로 출력
+      Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => {}))]).then(() => {
+        window.__posterReady = true
+      })
+    </script>
+  </body>
+</html>

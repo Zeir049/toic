@@ -1,8 +1,25 @@
-# 토익 답안지 채점 프로그램
+# 토익 채점 & 오답노트
 
-토익(TOEIC) 정답지를 등록하고 답안을 마킹해 채점 및 오답노트를 만드는 프로그램입니다. 같은 채점 로직을 네 가지 방식으로 실행할 수 있습니다.
+PDF 시험지 바로 옆에서 마킹하고, 해설지를 붙여넣어 채점하고, 틀린 문제를 정리해 AI가 약점과 공부법까지 진단하는 **크롬 확장 프로그램**입니다.
 
-- **크롬 확장 프로그램**: PDF 옆 사이드 패널에서 마킹 → 정답지 붙여넣기 채점 → 오답노트 정리 → PDF 내보내기 (`extension/` 폴더, 설치 방법은 [extension/README.md](extension/README.md))
+![포스터 미리보기](poster/poster-preview.png)
+
+- 📄 **프로젝트 포스터 (A2 PDF)**: [poster/poster.pdf](poster/poster.pdf)
+- 🧩 **크롬 확장 프로그램 설치·사용법**: [extension/README.md](extension/README.md)
+- 🤖 **AI 약점 분석 (RAG)**: 약점 프로필 → 공부법 지식베이스 검색 → OpenRouter 무료 모델이 학습 계획 작성
+
+### 빠른 설치
+
+1. 이 레포를 내려받습니다 (초록색 **Code** 버튼 → **Download ZIP** 후 압축 해제).
+2. 크롬에서 `chrome://extensions` → 오른쪽 위 **개발자 모드** 켜기.
+3. **압축해제된 확장 프로그램을 로드합니다** → `extension` 폴더 선택.
+4. PDF를 크롬에서 열고 툴바 아이콘(또는 `Alt+Shift+T`)으로 사이드 패널을 엽니다.
+
+## 이전 버전
+
+처음에는 Python과 React로 만들었고, 같은 채점 로직을 네 가지 방식으로 실행할 수 있습니다.
+
+- **크롬 확장 프로그램**: PDF 옆 사이드 패널에서 마킹 → 정답지 붙여넣기 채점 → 오답노트 정리 → PDF 내보내기 → AI 분석 (`extension/` 폴더, 설치 방법은 [extension/README.md](extension/README.md))
 - **tkinter GUI**: 데스크톱 환경(디스플레이 있음)에서 실행
 - **CLI**: tkinter/디스플레이가 없는 환경에서 자동으로 실행되는 터미널 버전
 - **웹(React + Vite)**: 브라우저에서 실행되는 버전 (`web/` 폴더)
