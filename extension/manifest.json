@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "토익 채점 & 오답노트",
+  "version": "1.1.0",
+  "description": "PDF 옆 사이드 패널에서 답안 마킹 → 정답지 붙여넣기 채점 → 오답노트 정리 → PDF 내보내기",
+  "minimum_chrome_version": "116",
+  "permissions": ["sidePanel", "storage", "unlimitedStorage"],
+  "optional_host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "action": {
+    "default_title": "토익 채점 패널 열기",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+T" },
+      "description": "토익 채점 패널 열기"
+    }
+  }
+}

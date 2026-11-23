@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>문제 영역 자르기</title>
+    <style>
+      :root { --bg: #1b1d21; --text: #e7e9ec; --accent: #5b8cf5; color-scheme: dark; }
+      html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+        font: 13px system-ui, "Malgun Gothic", sans-serif; }
+      body { display: flex; flex-direction: column; }
+      header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #2e3238; }
+      header p { margin: 0; flex: 1; color: #9aa1ab; }
+      button { font: inherit; border-radius: 6px; padding: 6px 12px; cursor: pointer;
+        border: 1px solid #3a3f46; background: #23262b; color: var(--text); }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+      button:disabled { opacity: 0.45; cursor: default; }
+      main { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 12px; }
+      #stage { position: relative; cursor: crosshair; user-select: none; line-height: 0; }
+      #shot { max-width: calc(100vw - 24px); max-height: calc(100vh - 80px); display: block; }
+      #sel { position: absolute; border: 2px solid var(--accent); box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+        pointer-events: none; display: none; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p>오답노트에 넣을 문제 영역을 드래그로 선택하세요. <b>Enter</b> 저장 · <b>Esc</b> 취소</p>
+      <button id="cancel">취소</button>
+      <button id="full">화면 전체 저장</button>
+      <button id="save" class="primary" disabled>선택 영역 저장</button>
+    </header>
+    <main><div id="stage"><img id="shot" alt="캡처 화면" draggable="false" /><div id="sel"></div></div></main>
+    <script type="module" src="crop.js"></script>
+  </body>
+</html>
