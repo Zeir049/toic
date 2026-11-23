@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>토익 오답노트</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <div class="toolbar no-print">
+      <strong>오답노트 내보내기</strong>
+      <label><input type="checkbox" id="opt-grid" checked /> 전체 답안표</label>
+      <label><input type="checkbox" id="opt-flagged" checked /> 맞았지만 헷갈린 문항</label>
+      <label><input type="checkbox" id="opt-reviewed" checked /> 복습 완료 문항</label>
+      <label><input type="checkbox" id="opt-lines" checked /> 메모 없으면 필기 줄</label>
+      <span class="spacer"></span>
+      <span class="tip">인쇄 창에서 대상을 <b>“PDF로 저장”</b>으로 고르세요</span>
+      <button id="btn-print">PDF로 저장</button>
+    </div>
+    <main id="doc"></main>
+    <script type="module" src="report.js"></script>
+  </body>
+</html>

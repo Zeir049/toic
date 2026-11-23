@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>토익 채점</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="mark" aria-selected="true">마킹</button>
+      <button role="tab" data-tab="grade" aria-selected="false">채점</button>
+      <button role="tab" data-tab="notes" aria-selected="false">오답노트 <span id="notes-count" class="pill" hidden></span></button>
+      <button role="tab" data-tab="analysis" aria-selected="false">분석</button>
+    </nav>
+
+    <!-- 1. 마킹 -->
+    <section id="tab-mark" class="tab-body" role="tabpanel">
+      <div class="block">
+        <input id="title" type="text" placeholder="시험 이름 (예: ETS 1000제 1회)" autocomplete="off" />
+        <div class="range-row">
+          <button class="chip" data-range="1,200">전체 1–200</button>
+          <button class="chip" data-range="1,100">LC 1–100</button>
+          <button class="chip" data-range="101,100">RC 101–200</button>
+          <span class="range-custom">
+            <input id="range-start" type="number" min="1" max="999" title="시작 번호" />
+            <span>번부터</span>
+            <input id="range-count" type="number" min="1" max="999" title="문항 수" />
+            <span>문항</span>
+          </span>
+        </div>
+        <div class="progress">
+          <div class="bar"><div id="progress-fill"></div></div>
+          <span id="progress-text"></span>
+        </div>
+        <p class="hint">
+          <kbd>A–D</kbd>/<kbd>1–4</kbd> 마킹 · <kbd>↑</kbd><kbd>↓</kbd> 이동 · <kbd>⌫</kbd> 지우기 ·
+          <kbd>F</kbd> 또는 번호 우클릭 = 헷갈림 표시
+        </p>
+      </div>
+      <div id="omr" class="omr" tabindex="0" aria-label="답안 마킹 영역"></div>
+      <footer class="actions">
+        <button id="btn-new" class="ghost">새 시험</button>
+        <button id="btn-clear-marks" class="ghost">마킹 지우기</button>
+        <button id="btn-to-grade" class="primary">채점하기 →</button>
+      </footer>
+    </section>
+
+    <!-- 2. 채점 -->
+    <section id="tab-grade" class="tab-body" role="tabpanel" hidden>
+      <div class="block">
+        <label class="label" for="key-text">정답지 붙여넣기</label>
+        <textarea
+          id="key-text"
+          rows="5"
+          spellcheck="false"
+          placeholder="해설지의 정답을 그대로 복사해서 붙여넣으세요.&#10;예) 101. (B) 102. (D) 103. (A) ...&#10;예) 1-10 ABDCA BCDAB ...&#10;예) ①②④③..."
+        ></textarea>
+        <p id="key-status" class="status"></p>
+        <div class="preset-row">
+          <select id="preset-select"><option value="">저장된 정답지…</option></select>
+          <button id="btn-preset-load" class="ghost small">불러오기</button>
+          <button id="btn-preset-save" class="ghost small">저장</button>
+          <button id="btn-preset-del" class="ghost small danger">삭제</button>
+        </div>
+        <button id="btn-grade" class="primary wide">채점하기</button>
+      </div>
+      <div id="result"></div>
+    </section>
+
+    <!-- 3. 오답노트 -->
+    <section id="tab-notes" class="tab-body" role="tabpanel" hidden>
+      <div id="notes-list-view">
+        <div class="block row-between">
+          <strong>채점 기록</strong>
+          <button id="btn-export-all" class="ghost small">전체 PDF 내보내기</button>
+        </div>
+        <div id="records"></div>
+      </div>
+      <div id="notes-detail-view" hidden>
+        <div class="block detail-head">
+          <button id="btn-back" class="ghost small">← 목록</button>
+          <div class="detail-title">
+            <strong id="detail-title"></strong>
+            <span id="detail-sub" class="muted"></span>
+          </div>
+          <button id="btn-export-one" class="primary small">PDF 내보내기</button>
+        </div>
+        <div class="block filter-row">
+          <button class="chip" data-filter="all" aria-pressed="true">전체</button>
+          <button class="chip" data-filter="wrong">오답</button>
+          <button class="chip" data-filter="blank">미응답</button>
+          <button class="chip" data-filter="flagged">헷갈림</button>
+          <label class="check"><input id="hide-reviewed" type="checkbox" /> 복습 완료 숨기기</label>
+        </div>
+        <p class="hint pad">카드를 클릭한 뒤 <kbd>Ctrl</kbd>+<kbd>V</kbd>로 캡처 이미지(<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>)를 붙여넣을 수 있어요.</p>
+        <div id="items"></div>
+        <div class="block danger-zone">
+          <button id="btn-del-record" class="ghost small danger">이 기록 삭제</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 약점 분석 + AI 공부법 추천 (RAG) -->
+    <section id="tab-analysis" class="tab-body" role="tabpanel" hidden>
+      <div class="block row-between">
+        <strong>약점 분석</strong>
+        <select id="an-range" class="compact" aria-label="분석 범위">
+          <option value="0">전체 기록</option>
+          <option value="5">최근 5회</option>
+          <option value="3">최근 3회</option>
+          <option value="1">최근 1회</option>
+        </select>
+      </div>
+      <div id="an-profile"></div>
+
+      <div class="block ai-box">
+        <div class="row-between">
+          <strong>AI 공부법 추천</strong>
+          <span id="ai-meta" class="muted small-text"></span>
+        </div>
+        <p class="hint">
+          위 분석과 오답 메모로 공부법 자료를 찾은 뒤(RAG), OpenRouter 무료 모델이 맞춤 학습 계획을 써 줘요.
+        </p>
+        <div class="ai-actions">
+          <button id="btn-ai" class="primary">추천 받기</button>
+          <button id="btn-ai-stop" class="ghost" hidden>중지</button>
+          <span id="ai-status" class="muted small-text"></span>
+        </div>
+      </div>
+      <article id="ai-output" class="ai-output" hidden></article>
+      <div id="ai-sources" class="block" hidden></div>
+
+      <details id="ai-settings" class="block settings">
+        <summary>AI 설정 (OpenRouter)</summary>
+        <label class="label" for="ai-key">API 키</label>
+        <div class="key-row">
+          <input id="ai-key" type="password" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false" />
+          <button id="btn-key-save" class="ghost small">저장</button>
+          <button id="btn-key-del" class="ghost small danger">삭제</button>
+        </div>
+        <p class="hint">openrouter.ai 로그인 → Keys에서 무료로 발급해요. 키는 이 브라우저에만 저장돼요.</p>
+        <label class="label" for="ai-model">모델</label>
+        <div class="key-row">
+          <select id="ai-model"></select>
+          <button id="btn-models" class="ghost small">목록 새로고침</button>
+        </div>
+        <p class="hint">
+          보내는 내용: 파트별 정답률·오답 태그 통계·최근 오답 메모 일부. 시험 이름, PDF, 이미지는 보내지 않아요.
+          무료 모델은 제공사가 입력을 기록하거나 학습에 쓸 수 있으니 메모에 개인정보를 적지 마세요.
+        </p>
+      </details>
+    </section>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>
